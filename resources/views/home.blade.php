@@ -34,7 +34,7 @@
                         <div class="card-header">Validasi Laporan</div>
                         <div class="card-body">
                             <p class="card-text">Cek dan validasi laporan kerusakan dari penjaga.</p>
-                            <a href="?status=draft" class="btn btn-light">Lihat Laporan</a>
+                            <a href="{{ route('pemeliharaan.index', ['status' => 'draft']) }}" class="btn btn-light">Lihat Laporan</a>
                         </div>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                         <div class="card-header">Persetujuan Perbaikan</div>
                         <div class="card-body">
                             <p class="card-text">Berikan tindak lanjut atas laporan yang sudah divalidasi staff.</p>
-                            <a href="?status=validated_staff" class="btn btn-light">Lihat Laporan</a>
+                            <a href="{{ route('pemeliharaan.index', ['status' => 'validated_staff']) }}" class="btn btn-light">Lihat Laporan</a>
                         </div>
                     </div>
                 </div>
