@@ -117,51 +117,7 @@
                         </td>
                     </tr>
 
-                    <!-- MODAL DETAIL -->
-                    <div class="modal fade" id="modalDetail{{ $laporan->id }}" tabindex="-1">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Detail Laporan #{{ $laporan->id }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><strong>Barang:</strong> {{ $laporan->barang->merek }} {{ $laporan->barang->jenis }}</p>
-                                            <p><strong>Lokasi:</strong> {{ $laporan->barang->lokasi->nama_ruangan }}</p>
-                                            <p><strong>Deskripsi Kerusakan:</strong><br>{{ $laporan->deskripsi_kerusakan }}</p>
-                                            <p><strong>Foto Awal:</strong><br>
-                                                @if($laporan->foto_bukti_awal)
-                                                    <img src="{{ asset('storage/' . $laporan->foto_bukti_awal) }}" class="img-thumbnail" style="max-height: 150px;">
-                                                @else
-                                                    <em>Tidak ada foto</em>
-                                                @endif
-                                            </p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><strong>Status:</strong> {{ $statusText }}</p>
-                                            
-                                            @if($laporan->tindakan_waka)
-                                                <div class="alert alert-primary">
-                                                    <strong>Instruksi Waka:</strong><br>
-                                                    {{ $laporan->tindakan_waka }}
-                                                    <br><small>Estimasi Biaya: Rp {{ number_format($laporan->biaya_estimasi ?? 0, 0, ',', '.') }}</small>
-                                                </div>
-                                            @endif
-
-                                            @if($laporan->foto_bukti_akhir)
-                                                <p><strong>Foto Setelah Perbaikan:</strong><br>
-                                                    <img src="{{ asset('storage/' . $laporan->foto_bukti_akhir) }}" class="img-thumbnail" style="max-height: 150px;">
-                                                </p>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END MODAL -->
+                   
 
                     @empty
                     <tr>
@@ -174,4 +130,65 @@
         {{ $laporans->links() }}
     </div>
 </div>
+
+
+<!-- PINDAHKAN SEMUA MODAL KE SINI (DI LUAR CARD & TABLE) -->
+@foreach($laporans as $laporan)
+<div class="modal fade" id="modalDetail{{ $laporan->id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detail Laporan #{{ $laporan->id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Barang:</strong> {{ $laporan->barang->merek }} {{ $laporan->barang->jenis }}</p>
+                        <p><strong>Lokasi:</strong> {{ $laporan->barang->lokasi->nama_ruangan }}</p>
+                        <p><strong>Deskripsi Kerusakan:</strong><br>{{ $laporan->deskripsi_kerusakan }}</p>
+                        <p><strong>Foto Awal:</strong><br>
+                            @if($laporan->foto_bukti_awal)
+                                <img src="{{ asset('storage/' . $laporan->foto_bukti_awal) }}" class="img-thumbnail" style="max-height: 150px;">
+                            @else
+                                <em>Tidak ada foto</em>
+                            @endif
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        @php
+                            $statusText = match($laporan->status_laporan) {
+                                'draft' => 'Draft',
+                                'revisi' => 'Perlu Revisi',
+                                'validated_staff' => 'Menunggu Waka',
+                                'approved_waka' => 'Disetujui Waka',
+                                'selesai' => 'Selesai',
+                                default => $laporan->status_laporan
+                            };
+                        @endphp
+                        <p><strong>Status:</strong> {{ $statusText }}</p>
+                        
+                        @if($laporan->tindakan_waka)
+                            <div class="alert alert-primary">
+                                <strong>Instruksi Waka:</strong><br>
+                                {{ $laporan->tindakan_waka }}
+                                <br><small>Estimasi Biaya: Rp {{ number_format($laporan->biaya_estimasi ?? 0, 0, ',', '.') }}</small>
+                            </div>
+                        @endif
+
+                        @if($laporan->foto_bukti_akhir)
+                            <p><strong>Foto Setelah Perbaikan:</strong><br>
+                                <img src="{{ asset('storage/' . $laporan->foto_bukti_akhir) }}" class="img-thumbnail" style="max-height: 150px;">
+                            </p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
 @endsection
+
+
