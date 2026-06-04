@@ -75,7 +75,7 @@
                     
                     @guest
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('login') }}"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
-                        <li class="nav-item"><a class="nav-link px-3" href="{{ route('register') }}"><i class="fas fa-user-plus me-1"></i>Register</a></li>
+                        <!-- <li class="nav-item"><a class="nav-link px-3" href="{{ route('register') }}"><i class="fas fa-user-plus me-1"></i>Register</a></li> -->
                     @else
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('barang.index') }}"><i class="fas fa-boxes me-1"></i>Barang</a></li>
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('pemeliharaan.index') }}"><i class="fas fa-tools me-1"></i>Pemeliharaan</a></li>

@@ -31,12 +31,12 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3 form-check">
+                    <!-- <div class="mb-3 form-check">
                         <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
                         <label class="form-check-label" for="remember">
                             Remember Me
                         </label>
-                    </div>
+                    </div> -->
 
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary">
@@ -44,18 +44,18 @@
                         </button>
                     </div>
 
-                    @if (Route::has('password.request'))
+                    <!-- @if (Route::has('password.request'))
                         <div class="text-center mt-3">
                             <a class="btn btn-link" href="{{ route('password.request') }}">
                                 Forgot Your Password?
                             </a>
                         </div>
-                    @endif
+                    @endif -->
                 </form>
             </div>
-            <div class="card-footer text-center">
+            <!-- <div class="card-footer text-center">
                 <small>Belum punya akun? <a href="{{ route('register') }}">Register disini</a></small>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
