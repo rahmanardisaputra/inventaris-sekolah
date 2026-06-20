@@ -13,25 +13,38 @@ return new class extends Migration
     {
         Schema::create('barang_inventaris', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_aset')->unique(); // Kode unik untuk QR Code (Misal: INV-001)
-            
-            // Relasi ke Lokasi
-            $table->foreignId('lokasi_id')->constrained('lokasi_ruangan')->onDelete('cascade');
-            
-            // Detail Barang
-            $table->string('kategori'); // Elektronik, Mebel, Alat Tulis
-            $table->string('merek');
-            $table->string('jenis'); // Misal: Laptop, Kursi, Spidol
+
+            $table->foreignId('master_kode_aset_id')
+                ->constrained('master_kode_aset')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
+
+            $table->string('kode_aset')->unique();
+
+            $table->foreignId('lokasi_id')
+                ->constrained('lokasi_ruangan')
+                ->cascadeOnDelete();
+
+            $table->string('merek')->nullable();
+            $table->string('nama_barang');
+
             $table->decimal('harga_perolehan', 15, 2)->default(0);
             $table->date('tanggal_perolehan');
-            
-            // Status & Kondisi
-            $table->enum('kondisi_terkini', ['Baik', 'Rusak Ringan', 'Rusak Berat'])->default('Baik');
-            $table->enum('status_validasi', ['pending', 'approved', 'rejected'])->default('pending');
-            
-            // Catatan dari Waka saat validasi
+
+            $table->enum('kondisi_terkini', [
+                'Baik',
+                'Rusak Ringan',
+                'Rusak Berat'
+            ])->default('Baik');
+
+            $table->enum('status_validasi', [
+                'pending',
+                'approved',
+                'rejected'
+            ])->default('pending');
+
             $table->text('catatan_waka')->nullable();
-            
+
             $table->timestamps();
         });
     }

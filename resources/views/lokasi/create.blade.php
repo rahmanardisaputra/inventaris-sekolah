@@ -18,6 +18,13 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kode Ruangan</label>
+                        <input type="text" name="kode_ruangan" class="form-control @error('kode_ruangan') is-invalid @enderror" placeholder="" value="{{ old('kode_ruangan') }}" required>
+                        @error('kode_ruangan')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Penanggung Jawab (Opsional)</label>

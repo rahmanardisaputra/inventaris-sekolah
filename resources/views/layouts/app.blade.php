@@ -80,6 +80,9 @@
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('barang.index') }}"><i class="fas fa-boxes me-1"></i>Barang</a></li>
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('pemeliharaan.index') }}"><i class="fas fa-tools me-1"></i>Pemeliharaan</a></li>
                         <li class="nav-item"><a class="nav-link px-3" href="{{ route('lokasi.index') }}"><i class="fas fa-door-open me-1"></i>Ruangan</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="{{ route('master-kode-aset.index') }}"><i class="fas fa-list me-1"></i>Kode Aset</a>
+                        </li>
                         
                         <!-- Dropdown Laporan -->
                         <li class="nav-item dropdown">

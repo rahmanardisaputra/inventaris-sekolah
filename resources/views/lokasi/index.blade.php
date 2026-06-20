@@ -18,6 +18,7 @@
                     <tr>
                         <th>No</th>
                         <th>Nama Ruangan</th>
+                        <th>Kode Ruangan</th>
                         <th>Penanggung Jawab</th>
                         <th>Jumlah Barang</th>
                         <th>Aksi</th>
@@ -28,6 +29,7 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td><strong>{{ $lokasi->nama_ruangan }}</strong></td>
+                        <td>{{ $lokasi->kode_ruangan }}</td>
                         <td>{{ $lokasi->penanggung_jawab ?? '-' }}</td>
                         <td>
                             <span class="badge bg-info text-dark">{{ $lokasi->barangs()->where('status_validasi', 'approved')->count() }} Item</span>

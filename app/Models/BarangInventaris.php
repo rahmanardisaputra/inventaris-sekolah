@@ -10,11 +10,11 @@ class BarangInventaris extends Model
     use HasFactory;
 
     protected $fillable = [
+        'master_kode_aset_id',
         'kode_aset',
         'lokasi_id',
-        'kategori',
         'merek',
-        'jenis',
+        'nama_barang',
         'harga_perolehan',
         'tanggal_perolehan',
         'kondisi_terkini',
@@ -23,6 +23,12 @@ class BarangInventaris extends Model
     ];
 
     protected $table = 'barang_inventaris';
+
+    // Relasi: Barang milik Master Kode Aset tertentu
+    public function masterKodeAset()
+    {
+        return $this->belongsTo(MasterKodeAset::class, 'master_kode_aset_id');
+    }
 
     // Relasi: Barang berada di satu Lokasi
     public function lokasi()

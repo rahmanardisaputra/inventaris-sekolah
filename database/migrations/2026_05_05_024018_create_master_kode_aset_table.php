@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lokasi_ruangan', function (Blueprint $table) {
+        Schema::create('master_kode_aset', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_ruangan'); // Misal: Lab Komputer, Ruang Guru
-            $table->string('kode_ruangan')->nullable();
-            $table->string('penanggung_jawab')->nullable(); // Nama orang yang jaga ruangan
+            $table->string('kategori');
+            $table->string('kelompok');
+            $table->string('jenis');
+            $table->string('kode_prefix')->unique();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lokasi_ruangan');
+        Schema::dropIfExists('master_kode_aset');
     }
 };

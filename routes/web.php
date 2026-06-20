@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\PemeliharaanController;
 use App\Http\Controllers\LaporanController; // Kita akan buat ini nanti untuk PDF/Excel
+use App\Http\Controllers\MasterKodeAsetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,12 +47,18 @@ Route::middleware(['auth'])->group(function () {
     });
     // A. Akses Umum (Semua Role Bisa Lihat Daftar & Detail)
     Route::get('/barang', [BarangController::class, 'index'])->name('barang.index');
+    // Tambahkan di routes/web.php
+Route::get('/barang/export-excel', [BarangController::class, 'exportExcel'])
+     ->name('barang.export.excel');
     Route::get('/barang/{barang}', [BarangController::class, 'show'])->name('barang.show');
     Route::get('/barang/{barang}/qr', [BarangController::class, 'generateQr'])->name('barang.qr');
 
 
     
 
+    Route::middleware(['auth'])->group(function () {
+        Route::resource('master-kode-aset', MasterKodeAsetController::class);
+    });
 
     // =========================================================
     // 2. FITUR PEMELIHARAAN & PERBAIKAN

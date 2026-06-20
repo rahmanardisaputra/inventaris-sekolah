@@ -2,6 +2,67 @@
 
 @section('content')
 <style>
+    .table-laporan {
+        font-size: 11px;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .table-laporan thead {
+        background-color: #fff3cd;
+        background-image: linear-gradient(to bottom, #fff3cd 0%, #ffeeba 100%);
+    }
+    .table-laporan th {
+        border: 1px solid #dee2e6;
+        padding: 8px 4px;
+        font-weight: 600;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .table-laporan td {
+        border: 1px solid #dee2e6;
+        padding: 6px 4px;
+        vertical-align: middle;
+    }
+    .table-laporan tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    .header-laporan {
+        background-color: #fff3cd;
+        border: 2px solid #dee2e6;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    .header-laporan h3 {
+        margin: 0 0 10px 0;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    .info-cetak {
+        font-size: 12px;
+        margin: 5px 0;
+    }
+    .filter-section {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .checkbox-col {
+        width: 3%;
+    }
+    .no-col {
+        width: 3%;
+    }
+    .kode-col {
+        width: 12%;
+    }
+    .text-tiny {
+        font-size: 10px;
+    }
+    
     /* Style Khusus Print */
     @media print {
         body * {
@@ -15,47 +76,51 @@
             left: 0;
             top: 0;
             width: 100%;
+            margin: 0;
+            padding: 10px;
         }
         .no-print {
             display: none !important;
         }
-        table {
-            font-size: 10pt;
+        .table-laporan {
+            font-size: 8pt;
             width: 100%;
         }
-        th, td {
+        .table-laporan th, 
+        .table-laporan td {
             border: 1px solid black !important;
-            padding: 4px;
+            padding: 3px;
+        }
+        .header-laporan {
+            border: 1px solid black;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        @page {
+            size: landscape;
+            margin: 1cm;
         }
     }
 </style>
 
-<div class="d-flex justify-content-between align-items-center mb-4 no-print">
-    <h2>Laporan Daftar Inventaris Barang</h2>
-    <button onclick="window.print()" class="btn btn-primary">
-        <i class="fas fa-print"></i> Cetak / Simpan PDF
-    </button>
+<!-- Header Laporan -->
+<div class="header-laporan" id="area-cetak">
+    <h3>LAPORAN BARANG SD Muhammadiyah Metro Pusat</h3>
+    <div class="info-cetak">
+        <strong>Ruang:</strong> {{ $lokasiTerpilih->nama_ruangan ?? 'Semua Ruangan' }} &nbsp;|&nbsp; 
+        <strong>Dicetak pada:</strong> {{ date('d-m-Y') }}
+        @if(request('tahun'))
+            &nbsp;|&nbsp; <strong>Tahun:</strong> {{ request('tahun') }}
+        @endif
+    </div>
 </div>
 
-<!-- Area yang akan dicetak -->
-<div id="area-cetak">
-    <div class="text-center mb-4">
-        <h4>LAPORAN DAFTAR BARANG INVENTARIS</h4>
-        <h5>SD MUHAMMADIYAH METRO PUSAT</h5>
-        @if($lokasiTerpilih)
-            <p>Ruangan: <strong>{{ $lokasiTerpilih->nama_ruangan }}</strong></p>
-        @else
-            <p>Semua Ruangan</p>
-        @endif
-        <p>Tanggal Cetak: {{ date('d F Y') }}</p>
-        <hr>
-    </div>
-
-    <!-- Form Filter (Tidak ikut tercetak karena class no-print) -->
-    <form method="GET" action="{{ route('laporan.barang') }}" class="mb-4 no-print">
+<!-- Form Filter -->
+<div class="filter-section no-print">
+    <form method="GET" action="{{ route('laporan.barang') }}" id="filterForm">
         <div class="row align-items-end">
-            <div class="col-md-4">
-                <label class="form-label">Filter Berdasarkan Ruangan:</label>
+            <div class="col-md-3 mb-2">
+                <label class="form-label fw-semibold">Filter Ruangan:</label>
                 <select name="lokasi_id" class="form-select" onchange="this.form.submit()">
                     <option value="">-- Semua Ruangan --</option>
                     @foreach($lokasis as $lokasi)
@@ -65,64 +130,119 @@
                     @endforeach
                 </select>
             </div>
+            <div class="col-md-2 mb-2">
+                <label class="form-label fw-semibold">Filter Tahun:</label>
+                <select name="tahun" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Semua Tahun --</option>
+                    @foreach($tahuns as $tahun)
+                        <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
+                            {{ $tahun }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label fw-semibold">Tanggal Mulai:</label>
+                <input type="date" name="tgl_mulai" class="form-control" 
+                       value="{{ request('tgl_mulai') }}" onchange="this.form.submit()">
+            </div>
+            <div class="col-md-3 mb-2">
+                <label class="form-label fw-semibold">Tanggal Akhir:</label>
+                <input type="date" name="tgl_akhir" class="form-control" 
+                       value="{{ request('tgl_akhir') }}" onchange="this.form.submit()">
+            </div>
+            <div class="col-md-1 mb-2">
+                <a href="{{ route('laporan.barang') }}" class="btn btn-secondary w-100">
+                    <i class="fas fa-redo"></i> Reset
+                </a>
+            </div>
         </div>
     </form>
+</div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="table-light text-center">
-                <tr>
-                    <th>No</th>
-                    <th>Kode Aset</th>
-                    <th>Nama Barang</th>
-                    <th>Kategori</th>
-                    <th>Merek</th>
-                    <th>Harga Perolehan</th>
-                    <th>Tgl Perolehan</th>
-                    <th>Kondisi</th>
-                    <th>Lokasi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($barangs as $index => $barang)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td>{{ $barang->kode_aset }}</td>
-                    <td>{{ $barang->jenis }}</td>
-                    <td>{{ $barang->kategori }}</td>
-                    <td>{{ $barang->merek }}</td>
-                    <td class="text-end">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
-                    <td class="text-center">{{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d/m/Y') }}</td>
-                    <td class="text-center">{{ $barang->kondisi_terkini }}</td>
-                    <td>{{ $barang->lokasi->nama_ruangan }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="9" class="text-center">Tidak ada data barang.</td>
-                </tr>
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="5" class="text-end">Total Harga Aset:</th>
-                    <th class="text-end">Rp {{ number_format($barangs->sum('harga_perolehan'), 0, ',', '.') }}</th>
-                    <th colspan="3"></th>
-                </tr>
-            </tfoot>
-        </table>
+<!-- Tombol Aksi -->
+<div class="d-flex justify-content-between align-items-center mb-3 no-print">
+    <h5 class="mb-0">Daftar Inventaris Barang</h5>
+    <div>
+        <button onclick="window.print()" class="btn btn-primary btn-sm">
+            <i class="fas fa-print"></i> Cetak / Simpan PDF
+        </button>
+        <a href="{{ route('barang.export.excel', request()->all()) }}" class="btn btn-success btn-sm ms-2">
+            <i class="fas fa-file-excel"></i> Export Excel
+        </a>
     </div>
+</div>
 
-    <div class="mt-5 row no-print">
-        <div class="col-6 text-center">
-            <p>Mengetahui,<br>Kepala Sekolah</p>
-            <br><br><br>
-            <p>( ___________________ )</p>
+<!-- Tabel Laporan -->
+<div class="card shadow-sm mb-4 no-print">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-laporan">
+                <thead>
+                    <tr>
+                        <th class="no-col">NO</th>
+                        <th class="kode-col">KODE LOKASI</th>
+                        <th class="kode-col">KODE ASET</th>
+                        <th>KATEGORI</th>
+                        <th>KELOMPOK</th>
+                        <th>JENIS</th>
+                        <th>NAMA</th>
+                        <th>KONDISI</th>
+                        <th>PEROLEHAN</th>
+                        <th>HARGA</th>
+                        <th>TAHUN</th>
+                        <th>KET</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($barangs as $index => $barang)
+                    <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
+                        <td class="text-center text-tiny">{{ $barang->lokasi->kode ?? '-' }}</td>
+                        <td class="text-center"><strong>{{ $barang->kode_aset }}</strong></td>
+                        <td>{{ $barang->masterKodeAset->kategori ?? $barang->kategori ?? '-' }}</td>
+                        <td>{{ $barang->masterKodeAset->kelompok ?? '-' }}</td>
+                        <td>{{ $barang->masterKodeAset->jenis ?? $barang->jenis ?? '-' }}</td>
+                        <td>{{ $barang->nama_barang }}</td>
+                        <td class="text-center">
+                            <span class="badge {{ $barang->kondisi_terkini === 'Baik' ? 'bg-success' : ($barang->kondisi_terkini === 'Rusak Ringan' ? 'bg-warning' : 'bg-danger') }} text-tiny">
+                                {{ $barang->kondisi_terkini }}
+                            </span>
+                        </td>
+                        <td class="text-center">{{ $barang->sumber_perolehan ?? 'Beli' }}</td>
+                        <td class="text-end text-tiny">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
+                        <td class="text-center text-tiny">{{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') }}</td>
+                        <td class="text-tiny">{{ Str::limit($barang->catatan_waka ?? '-', 20) }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="12" class="text-center">Tidak ada data barang.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="9" class="text-end">Total Harga Aset:</th>
+                        <th class="text-end">Rp {{ number_format($barangs->sum('harga_perolehan'), 0, ',', '.') }}</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-        <div class="col-6 text-center">
-            <p>Metro, {{ date('d F Y') }}<br>Petugas Inventaris</p>
-            <br><br><br>
-            <p>( {{ Auth::user()->name }} )</p>
-        </div>
+    </div>
+</div>
+
+<!-- Tanda Tangan (Hanya untuk print) -->
+<div class="mt-5 row d-print-block d-none">
+    <div class="col-6 text-center">
+        <p>Mengetahui,<br>Kepala Sekolah</p>
+        <br><br><br>
+        <p>( ___________________ )</p>
+    </div>
+    <div class="col-6 text-center">
+        <p>Metro, {{ date('d F Y') }}<br>Petugas Inventaris</p>
+        <br><br><br>
+        <p>( {{ Auth::user()->name }} )</p>
     </div>
 </div>
 @endsection

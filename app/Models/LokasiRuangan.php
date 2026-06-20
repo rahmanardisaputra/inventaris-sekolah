@@ -11,6 +11,7 @@ class LokasiRuangan extends Model
 
     protected $fillable = [
         'nama_ruangan',
+        'kode_ruangan',
         'penanggung_jawab',
     ];
 

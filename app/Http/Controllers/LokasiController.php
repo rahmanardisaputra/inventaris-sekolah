@@ -31,6 +31,7 @@ class LokasiController extends Controller
     {
         $validated = $request->validate([
             'nama_ruangan' => 'required|string|unique:lokasi_ruangan,nama_ruangan|max:100',
+            'kode_ruangan' => 'required|string|unique:lokasi_ruangan,kode_ruangan|max:100',
             'penanggung_jawab' => 'nullable|string|max:100',
         ]);
 
@@ -68,6 +69,7 @@ class LokasiController extends Controller
     {
         $validated = $request->validate([
             'nama_ruangan' => 'required|string|unique:lokasi_ruangan,nama_ruangan,' . $lokasi->id . '|max:100',
+            'kode_ruangan' => 'required|string|unique:lokasi_ruangan,kode_ruangan,' . $lokasi->id . '|max:100',
             'penanggung_jawab' => 'nullable|string|max:100',
         ]);
 
