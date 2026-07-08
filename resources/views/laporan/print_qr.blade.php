@@ -83,7 +83,13 @@
         <div class="label-container">
             <!-- QR Code SVG Inline -->
             <div class="qr-code">
-                {!! QrCode::size(180)->generate($barang->kode_aset) !!}
+                @php
+                    $isiQr = "No Inv: {$barang->kode_aset}\n" .
+                             "Nama: {$barang->merek} {$barang->jenis}\n" .
+                             "Lokasi: " . ($barang->lokasi->nama_ruangan ?? '-') . "\n" .
+                             "Tgl. Perolehan: " . \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d-m-Y');
+                @endphp
+                {!! QrCode::size(180)->generate($isiQr) !!}
             </div>
             
             <!-- Informasi Barang -->
