@@ -235,40 +235,80 @@
     </div>
 </div>
 
-<!-- Rekapitulasi per Kelompok -->
+<!-- Rekapitulasi per Kelompok & Jenis -->
 @php
     $rekapKelompok = $barangs->groupBy(function($b) {
         return $b->masterKodeAset->kelompok ?? 'Lainnya';
     })->map->count();
+
+    $rekapJenis = $barangs->groupBy(function($b) {
+        return $b->masterKodeAset->jenis ?? 'Lainnya';
+    })->map->count();
 @endphp
-@if($rekapKelompok->count() > 0)
-<div class="card shadow-sm mb-4">
-    <div class="card-header bg-light">
-        <h6 class="mb-0"><strong>Rekapitulasi Jumlah per Kelompok Aset</strong></h6>
+
+@if($barangs->count() > 0)
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><strong>Rekapitulasi Jumlah per Kelompok</strong></h6>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered table-sm mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Kelompok Aset</th>
+                            <th class="text-center" width="30%">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rekapKelompok as $kelompok => $jumlah)
+                        <tr>
+                            <td>{{ $kelompok }}</td>
+                            <td class="text-center">{{ $jumlah }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <th>Total Keseluruhan</th>
+                            <th class="text-center">{{ $barangs->count() }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <table class="table table-bordered table-sm" style="width: 50%;">
-            <thead class="table-light">
-                <tr>
-                    <th>Kelompok Aset</th>
-                    <th class="text-center">Jumlah Barang</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($rekapKelompok as $kelompok => $jumlah)
-                <tr>
-                    <td>{{ $kelompok }}</td>
-                    <td class="text-center">{{ $jumlah }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>Total Keseluruhan</th>
-                    <th class="text-center">{{ $barangs->count() }}</th>
-                </tr>
-            </tfoot>
-        </table>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><strong>Rekapitulasi Jumlah per Jenis</strong></h6>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered table-sm mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Jenis Aset</th>
+                            <th class="text-center" width="30%">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rekapJenis as $jenis => $jumlah)
+                        <tr>
+                            <td>{{ $jenis }}</td>
+                            <td class="text-center">{{ $jumlah }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-light">
+                            <th>Total Keseluruhan</th>
+                            <th class="text-center">{{ $barangs->count() }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endif
