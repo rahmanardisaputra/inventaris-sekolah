@@ -139,7 +139,7 @@
                         <tr>
                             <th class="checkbox-col"><input type="checkbox" id="check-all-header" onclick="checkAll(this.checked)"></th>
                             <th class="no-col">NO</th>
-                            <th class="kode-col">KODE LOKASI</th>
+                            <th class="kode-col">LOKASI</th>
                             <th class="kode-col">KODE ASET</th>
                             <th>KATEGORI</th>
                             <th>KELOMPOK</th>
@@ -160,7 +160,10 @@
                                 <input type="checkbox" name="barang_ids[]" value="{{ $barang->id }}" class="form-check-input item-checkbox" onchange="updateCount()">
                             </td>
                             <td class="text-center">{{ $index + 1 }}</td>
-                            <td class="text-center text-tiny">{{ $barang->lokasi->kode_ruangan }}</td>
+                            <td class="text-center text-tiny">
+                                <strong>{{ $barang->lokasi->kode_ruangan ?? '-' }}</strong><br>
+                                {{ $barang->lokasi->nama_ruangan ?? '' }}
+                            </td>
                             <td class="text-center"><strong>{{ $barang->kode_aset }}</strong></td>
                             <td>{{ $barang->masterKodeAset->kategori ?? $barang->kategori ?? '-' }}</td>
                             <td>{{ $barang->masterKodeAset->kelompok ?? '-' }}</td>

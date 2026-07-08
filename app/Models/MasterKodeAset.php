@@ -23,4 +23,9 @@ class MasterKodeAset extends Model
     {
         return $this->hasMany(BarangInventaris::class, 'master_kode_aset_id');
     }
+
+    public function instruksiPemeliharaans()
+    {
+        return $this->hasMany(InstruksiPemeliharaan::class, 'master_kode_aset_id');
+    }
 }

@@ -47,13 +47,16 @@
                         <td class="text-center"><code class="fs-6">{{ $mk->kode_prefix }}</code></td>
                         <td>{{ $mk->keterangan ?? '-' }}</td>
                         <td class="text-center">
-                            <a href="{{ route('master-kode-aset.edit', $mk) }}" class="btn btn-sm btn-warning">
+                            <a href="{{ route('instruksi.index', $mk) }}" class="btn btn-sm btn-info" title="Preset Instruksi">
+                                <i class="fas fa-list-check"></i>
+                            </a>
+                            <a href="{{ route('master-kode-aset.edit', $mk) }}" class="btn btn-sm btn-warning" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <form action="{{ route('master-kode-aset.destroy', $mk) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger">
+                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>

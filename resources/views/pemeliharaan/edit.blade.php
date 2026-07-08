@@ -56,9 +56,35 @@
                             <strong>Info:</strong> Laporan ini telah divalidasi oleh Staff. Berikan instruksi perbaikan.
                         </div>
 
+                        @php
+                            // Ambil dari database InstruksiPemeliharaan sesuai dengan MasterKodeAset barang
+                            $presetOptions = [];
+                            if ($laporan->barang && $laporan->barang->masterKodeAset) {
+                                $presetOptions = $laporan->barang->masterKodeAset->instruksiPemeliharaans->pluck('instruksi');
+                            }
+                            
+                            // Jika kosong di database, berikan opsi fallback umum
+                            if ($presetOptions->isEmpty()) {
+                                $presetOptions = collect([
+                                    'Lakukan pengecekan fisik dan perbaikan ringan',
+                                    'Ganti suku cadang yang rusak',
+                                    'Bawa ke tempat servis rekanan',
+                                ]);
+                            }
+                        @endphp
+                        
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Instruksi Tindak Lanjut</label>
-                            <textarea name="tindakan_waka" class="form-control" rows="3" placeholder="Contoh: Segera ganti harddisk baru. Koordinasi dengan vendor IT." required>{{ old('tindakan_waka', $laporan->tindakan_waka) }}</textarea>
+                            <label class="form-label fw-bold">Instruksi Tindak Lanjut (Pilihan Cepat)</label>
+                            <select class="form-select mb-2" onchange="document.getElementById('tindakanWaka').value = this.value">
+                                <option value="">-- Pilih Instruksi Sesuai Jenis Barang --</option>
+                                @foreach($presetOptions as $opt)
+                                    <option value="{{ $opt }}">{{ $opt }}</option>
+                                @endforeach
+                            </select>
+                            
+                            <label class="form-label fw-bold">Catatan Instruksi (Bisa diketik manual)</label>
+                            <textarea id="tindakanWaka" name="tindakan_waka" class="form-control" rows="3" placeholder="Pilih dari opsi di atas, atau ketik instruksi khusus di sini..." required>{{ old('tindakan_waka', $laporan->tindakan_waka) }}</textarea>
+                            <small class="text-muted">Pilih dari dropdown di atas untuk mengisi otomatis, atau ketik langsung jika ada instruksi khusus.</small>
                         </div>
 
                         <div class="mb-3">

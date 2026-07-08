@@ -58,6 +58,12 @@ Route::get('/barang/export-excel', [BarangController::class, 'exportExcel'])
 
     Route::middleware(['auth'])->group(function () {
         Route::resource('master-kode-aset', MasterKodeAsetController::class);
+        
+        // CRUD Instruksi per Kode Aset
+        Route::get('/master-kode-aset/{masterKodeAset}/instruksi', [App\Http\Controllers\InstruksiPemeliharaanController::class, 'index'])->name('instruksi.index');
+        Route::post('/master-kode-aset/{masterKodeAset}/instruksi', [App\Http\Controllers\InstruksiPemeliharaanController::class, 'store'])->name('instruksi.store');
+        Route::put('/instruksi/{instruksiPemeliharaan}', [App\Http\Controllers\InstruksiPemeliharaanController::class, 'update'])->name('instruksi.update');
+        Route::delete('/instruksi/{instruksiPemeliharaan}', [App\Http\Controllers\InstruksiPemeliharaanController::class, 'destroy'])->name('instruksi.destroy');
     });
 
     // =========================================================

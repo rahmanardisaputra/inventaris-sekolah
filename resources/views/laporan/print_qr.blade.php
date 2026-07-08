@@ -85,8 +85,10 @@
             <div class="qr-code">
                 @php
                     $isiQr = "No Inv: {$barang->kode_aset}\n" .
-                             "Nama: {$barang->merek} {$barang->jenis}\n" .
+                             "Nama: {$barang->merek} " . ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? '') . "\n" .
                              "Lokasi: " . ($barang->lokasi->nama_ruangan ?? '-') . "\n" .
+                             "PJ: " . ($barang->lokasi->penanggung_jawab ?? '-') . "\n" .
+                             "Harga: Rp " . number_format($barang->harga_perolehan, 0, ',', '.') . "\n" .
                              "Tgl. Perolehan: " . \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d-m-Y');
                 @endphp
                 {!! QrCode::size(180)->generate($isiQr) !!}
@@ -95,8 +97,10 @@
             <!-- Informasi Barang -->
             <div class="label-info">
                 <p><strong>No Inv:</strong> {{ $barang->kode_aset }}</p>
-                <p><strong>Nama:</strong> {{ Str::limit($barang->merek . ' ' . $barang->jenis, 25) }}</p>
+                <p><strong>Nama:</strong> {{ Str::limit($barang->merek . ' ' . ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? ''), 25) }}</p>
                 <p><strong>Lokasi:</strong> {{ Str::limit($barang->lokasi->nama_ruangan ?? '-', 20) }}</p>
+                <p><strong>PJ:</strong> {{ Str::limit($barang->lokasi->penanggung_jawab ?? '-', 20) }}</p>
+                <p><strong>Harga:</strong> Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</p>
                 <p><strong>Tgl. Perolehan:</strong> {{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d-m-Y') }}</p>
             </div>
         </div>
