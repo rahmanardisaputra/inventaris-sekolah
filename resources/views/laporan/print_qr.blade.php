@@ -19,7 +19,8 @@
         .label-container {
             display: inline-block;
             width: 280px;
-            height: 320px;
+            height: auto;
+            min-height: 320px;
             border: 2px solid #333;
             margin: 10px;
             padding: 15px;
@@ -86,6 +87,7 @@
                 @php
                     $isiQr = "No Inv: {$barang->kode_aset}\n" .
                              "Nama: {$barang->merek} " . ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? '') . "\n" .
+                             "Kategori: " . ($barang->masterKodeAset->kategori ?? '-') . "\n" .
                              "Lokasi: " . ($barang->lokasi->nama_ruangan ?? '-') . "\n" .
                              "PJ: " . ($barang->lokasi->penanggung_jawab ?? '-') . "\n" .
                              "Harga: Rp " . number_format($barang->harga_perolehan, 0, ',', '.') . "\n" .
@@ -98,6 +100,7 @@
             <div class="label-info">
                 <p><strong>No Inv:</strong> {{ $barang->kode_aset }}</p>
                 <p><strong>Nama:</strong> {{ Str::limit($barang->merek . ' ' . ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? ''), 25) }}</p>
+                <p><strong>Kategori:</strong> {{ Str::limit($barang->masterKodeAset->kategori ?? '-', 20) }}</p>
                 <p><strong>Lokasi:</strong> {{ Str::limit($barang->lokasi->nama_ruangan ?? '-', 20) }}</p>
                 <p><strong>PJ:</strong> {{ Str::limit($barang->lokasi->penanggung_jawab ?? '-', 20) }}</p>
                 <p><strong>Harga:</strong> Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</p>

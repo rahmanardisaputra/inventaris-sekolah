@@ -99,6 +99,7 @@
                         @php
     $isiQr = "No Inv: {$barang->kode_aset}\n" .
              "Nama: {$barang->nama_barang}\n" .
+             "Kategori: " . ($barang->masterKodeAset->kategori ?? '-') . "\n" .
              "Harga: Rp " . number_format($barang->harga_perolehan, 0, ',', '.') . "\n" .
              "Lokasi: " . ($barang->lokasi->nama_ruangan ?? '-') . "\n" .
              "PJ: " . ($barang->lokasi->penanggung_jawab ?? '-') . "\n" .
@@ -112,6 +113,7 @@
                     <div class="small text-center border-top pt-2">
                         <p class="mb-1"><strong>No Inv:</strong> {{ $barang->kode_aset }}</p>
                         <p class="mb-1"><strong>Nama:</strong> {{ $barang->nama_barang }}</p>
+                        <p class="mb-1"><strong>Kategori:</strong> {{ $barang->masterKodeAset->kategori ?? '-' }}</p>
                         <p class="mb-1"><strong>Harga:</strong> Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</p>
                         <p class="mb-1"><strong>Lokasi:</strong> {{ $barang->lokasi->nama_ruangan ?? '-' }}</p>
                         <p class="mb-1"><strong>PJ:</strong> {{ $barang->lokasi->penanggung_jawab ?? '-' }}</p>
