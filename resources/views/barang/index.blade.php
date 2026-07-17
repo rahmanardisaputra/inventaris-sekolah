@@ -178,10 +178,22 @@
                             <td class="text-end text-tiny">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
                             <td class="text-center text-tiny">{{ $barang->tanggal_perolehan ? \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') : '-' }}</td>
                             <td class="text-tiny">{{ Str::limit($barang->catatan_waka ?? '-', 20) }}</td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 <a href="{{ route('barang.show', $barang) }}" class="btn btn-sm btn-info text-tiny" title="Detail">
                                     <i class="fas fa-eye"></i>
                                 </a>
+                                @if(Auth::user()->role === 'staff')
+                                    <a href="{{ route('barang.edit', $barang) }}" class="btn btn-sm btn-warning text-tiny" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form action="{{ route('barang.destroy', $barang) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger text-tiny" title="Hapus">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                         @empty

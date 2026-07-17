@@ -99,7 +99,7 @@
             <!-- Informasi Barang -->
             <div class="label-info">
                 <p><strong>No Inv:</strong> {{ $barang->kode_aset }}</p>
-                <p><strong>Nama:</strong> {{ Str::limit($barang->merek . ' ' . ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? ''), 25) }}</p>
+                <p><strong>Nama:</strong> {{ ($barang->nama_barang ?? $barang->masterKodeAset->jenis ?? '') }}</p>
                 <p><strong>Kategori:</strong> {{ Str::limit($barang->masterKodeAset->kategori ?? '-', 20) }}</p>
                 <p><strong>Lokasi:</strong> {{ Str::limit($barang->lokasi->nama_ruangan ?? '-', 20) }}</p>
                 <p><strong>PJ:</strong> {{ Str::limit($barang->lokasi->penanggung_jawab ?? '-', 20) }}</p>

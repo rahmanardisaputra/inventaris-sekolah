@@ -150,13 +150,24 @@ public function exportExcel(Request $request)
      */
     public function edit(BarangInventaris $barang)
     {
-        // Cek apakah barang masih pending, jika sudah approved tidak boleh diedit sembarangan
-        if ($barang->status_validasi === 'approved') {
-            return abort(403, 'Barang sudah divalidasi, tidak dapat diedit melalui form ini.');
+        $lokasis = LokasiRuangan::all();
+        $masterKodes = \App\Models\MasterKodeAset::all();
+        
+        // Hitung next sequence untuk masing-masing master kode
+        foreach ($masterKodes as $mk) {
+            $lastBarang = \App\Models\BarangInventaris::where('master_kode_aset_id', $mk->id)
+                                          ->orderByRaw('CAST(SUBSTRING_INDEX(kode_aset, ".", -1) AS UNSIGNED) DESC')
+                                          ->first();
+            $nextUrut = 1;
+            if ($lastBarang) {
+                $lastKodeParts = explode('.', $lastBarang->kode_aset);
+                $lastNumber = intval(end($lastKodeParts));
+                $nextUrut = $lastNumber + 1;
+            }
+            $mk->next_sequence = str_pad($nextUrut, 3, '0', STR_PAD_LEFT);
         }
 
-        $lokasis = LokasiRuangan::all();
-        return view('barang.edit', compact('barang', 'lokasis'));
+        return view('barang.edit', compact('barang', 'lokasis', 'masterKodes'));
     }
 
     /**
@@ -164,19 +175,35 @@ public function exportExcel(Request $request)
      */
     public function update(Request $request, BarangInventaris $barang)
     {
-        if ($barang->status_validasi === 'approved') {
-            return abort(403, 'Barang sudah divalidasi.');
-        }
-
         $validated = $request->validate([
-            'kode_aset' => 'required|unique:barang_inventaris,kode_aset,' . $barang->id,
+            'master_kode_aset_id' => 'required|exists:master_kode_aset,id',
             'lokasi_id' => 'required|exists:lokasi_ruangan,id',
-            'kategori' => 'required|string',
-            'merek' => 'required|string',
-            'jenis' => 'required|string',
+            'nama_barang' => 'required|string|max:255',
+            'merek' => 'nullable|string|max:255',
             'harga_perolehan' => 'required|numeric|min:0',
             'tanggal_perolehan' => 'required|date',
+            'kondisi_terkini' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'catatan_waka' => 'nullable|string',
         ]);
+
+        // Jika Kategori/Master Kode Aset diubah, maka generate ulang Kode Aset yang baru
+        if ($barang->master_kode_aset_id != $validated['master_kode_aset_id']) {
+            $masterKode = \App\Models\MasterKodeAset::findOrFail($validated['master_kode_aset_id']);
+            $lastBarang = \App\Models\BarangInventaris::where('master_kode_aset_id', $masterKode->id)
+                                          ->orderByRaw('CAST(SUBSTRING_INDEX(kode_aset, ".", -1) AS UNSIGNED) DESC')
+                                          ->first();
+            $nextUrut = 1;
+            if ($lastBarang) {
+                $lastKodeParts = explode('.', $lastBarang->kode_aset);
+                $lastNumber = intval(end($lastKodeParts));
+                $nextUrut = $lastNumber + 1;
+            }
+            $formattedSequence = str_pad($nextUrut, 3, '0', STR_PAD_LEFT);
+            $validated['kode_aset'] = $masterKode->kode_prefix . '.' . $formattedSequence;
+        } else {
+            // Jika kategori tidak diubah, pertahankan kode aset lama
+            $validated['kode_aset'] = $barang->kode_aset;
+        }
 
         $barang->update($validated);
         return redirect()->route('barang.index')->with('success', 'Data barang berhasil diperbarui.');
@@ -187,11 +214,6 @@ public function exportExcel(Request $request)
      */
     public function destroy(BarangInventaris $barang)
     {
-        // Hanya hapus jika belum approved
-        if ($barang->status_validasi === 'approved') {
-            return abort(403, 'Barang yang sudah divalidasi tidak boleh dihapus.');
-        }
-
         $barang->delete();
         return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus.');
     }
