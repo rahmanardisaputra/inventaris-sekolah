@@ -17,25 +17,21 @@
                         <select name="master_kode_aset_id" id="master_kode_aset_id" class="form-select" required>
                             <option value="">Pilih Master Kode Aset</option>
                             @foreach($masterKodes as $mk)
-                                {{-- Tambahkan data-prefix untuk dibaca JavaScript --}}
-                                <option value="{{ $mk->id }}" data-prefix="{{ $mk->kode_prefix }}">
+                                {{-- Tambahkan data-prefix dan data-next untuk dibaca JavaScript --}}
+                                <option value="{{ $mk->id }}" data-prefix="{{ $mk->kode_prefix }}" data-next="{{ $mk->next_sequence }}">
                                     {{ $mk->kode_prefix }} - {{ $mk->keterangan }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
 
-                    {{-- INPUT NOMOR URUT MANUAL --}}
+                    {{-- PREVIEW KODE ASET --}}
                     <div class="mb-3">
-                        <label class="form-label">Nomor Urut (Input Manual)</label>
-                        <div class="input-group">
-                            <span class="input-group-text" id="kode-preview">Pilih prefix dulu...</span>
-                            <input type="number" name="nomor_urut" id="nomor_urut" class="form-control" placeholder="Contoh: 1, 2, 10" min="1" required>
+                        <label class="form-label">Preview Kode Aset</label>
+                        <div class="alert alert-info py-2 mb-0">
+                            <span id="kode-preview">Pilih Master Kode Aset terlebih dahulu...</span>
                         </div>
-                        <small class="text-muted">*Kode akhir akan digabung otomatis. Contoh: <code>03.01.01.07.001</code></small>
-                        @error('nomor_urut')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
+                        <small class="text-muted">*Nomor urut (3 digit terakhir) akan digenerate secara otomatis oleh sistem saat disimpan.</small>
                     </div>
 
                     <div class="row">
@@ -99,20 +95,21 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const prefixSelect = document.getElementById('master_kode_aset_id');
-        const nomorInput = document.getElementById('nomor_urut');
         const preview = document.getElementById('kode-preview');
 
         function updatePreview() {
             const selectedOption = prefixSelect.options[prefixSelect.selectedIndex];
             const prefix = selectedOption ? selectedOption.getAttribute('data-prefix') : null;
-            // PadStart 3 digit agar konsisten (1 jadi 001)
-            const nomor = nomorInput.value ? nomorInput.value.padStart(3, '0') : '000';
+            const nextSeq = selectedOption ? selectedOption.getAttribute('data-next') : null;
             
-            preview.textContent = prefix ? (prefix + '.' + nomor) : 'Pilih prefix dulu...';
+            if (prefix && nextSeq) {
+                preview.innerHTML = `<strong>${prefix}.${nextSeq}</strong>`;
+            } else {
+                preview.textContent = 'Pilih Master Kode Aset terlebih dahulu...';
+            }
         }
 
         prefixSelect.addEventListener('change', updatePreview);
-        nomorInput.addEventListener('input', updatePreview);
     });
 </script>
 @endsection

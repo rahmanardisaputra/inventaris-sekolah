@@ -75,16 +75,19 @@
                         
                         <div class="mb-3">
                             <label class="form-label fw-bold">Instruksi Tindak Lanjut (Pilihan Cepat)</label>
-                            <select class="form-select mb-2" onchange="document.getElementById('tindakanWaka').value = this.value">
+                            <select name="instruksi_cepat" class="form-select mb-2 @error('tindakan_waka') is-invalid @enderror">
                                 <option value="">-- Pilih Instruksi Sesuai Jenis Barang --</option>
                                 @foreach($presetOptions as $opt)
-                                    <option value="{{ $opt }}">{{ $opt }}</option>
+                                    <option value="{{ $opt }}" {{ old('instruksi_cepat') == $opt ? 'selected' : '' }}>{{ $opt }}</option>
                                 @endforeach
                             </select>
                             
-                            <label class="form-label fw-bold">Catatan Instruksi (Bisa diketik manual)</label>
-                            <textarea id="tindakanWaka" name="tindakan_waka" class="form-control" rows="3" placeholder="Pilih dari opsi di atas, atau ketik instruksi khusus di sini..." required>{{ old('tindakan_waka', $laporan->tindakan_waka) }}</textarea>
-                            <small class="text-muted">Pilih dari dropdown di atas untuk mengisi otomatis, atau ketik langsung jika ada instruksi khusus.</small>
+                            <label class="form-label fw-bold">Catatan Tambahan (Opsional)</label>
+                            <textarea id="tindakanWaka" name="tindakan_waka" class="form-control @error('tindakan_waka') is-invalid @enderror" rows="3" placeholder="Ketik instruksi tambahan di sini jika diperlukan...">{{ old('tindakan_waka') }}</textarea>
+                            @error('tindakan_waka')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="text-muted">Pilih instruksi dari pilihan cepat, atau isi catatan manual. Keduanya akan digabungkan jika diisi.</small>
                         </div>
 
                         <div class="mb-3">

@@ -123,12 +123,25 @@ class PemeliharaanController extends Controller
         // KASUS 2: Waka Berikan Tindak Lanjut (Validated Staff -> Approved Waka)
         if ($user->role === 'waka' && $laporan->status_laporan === 'validated_staff') {
             $validated = $request->validate([
-                'tindakan_waka' => 'required|string',
+                'instruksi_cepat' => 'nullable|string',
+                'tindakan_waka' => 'required_without:instruksi_cepat|nullable|string',
                 'biaya_estimasi' => 'nullable|numeric|min:0',
+            ], [
+                'tindakan_waka.required_without' => 'Harap pilih Instruksi Cepat atau isi Catatan Tambahan.'
             ]);
 
+            $finalInstruksi = [];
+            if (!empty($validated['instruksi_cepat'])) {
+                $finalInstruksi[] = $validated['instruksi_cepat'];
+            }
+            if (!empty($validated['tindakan_waka'])) {
+                $finalInstruksi[] = trim($validated['tindakan_waka']);
+            }
+            
+            $gabunganInstruksi = implode(' - ', $finalInstruksi);
+
             $laporan->update([
-                'tindakan_waka' => $validated['tindakan_waka'],
+                'tindakan_waka' => $gabunganInstruksi,
                 'biaya_estimasi' => $validated['biaya_estimasi'],
                 'status_laporan' => 'approved_waka',
             ]);

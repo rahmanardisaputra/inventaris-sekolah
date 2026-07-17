@@ -79,6 +79,21 @@ public function exportExcel(Request $request)
         // Ambil daftar lokasi untuk dropdown
         $lokasis = LokasiRuangan::all();
         $masterKodes = \App\Models\MasterKodeAset::all();
+        
+        // Hitung next sequence untuk masing-masing master kode
+        foreach ($masterKodes as $mk) {
+            $lastBarang = BarangInventaris::where('master_kode_aset_id', $mk->id)
+                                          ->orderByRaw('CAST(SUBSTRING_INDEX(kode_aset, ".", -1) AS UNSIGNED) DESC')
+                                          ->first();
+            $nextUrut = 1;
+            if ($lastBarang) {
+                $lastKodeParts = explode('.', $lastBarang->kode_aset);
+                $lastNumber = intval(end($lastKodeParts));
+                $nextUrut = $lastNumber + 1;
+            }
+            $mk->next_sequence = str_pad($nextUrut, 3, '0', STR_PAD_LEFT);
+        }
+
         return view('barang.create', compact('lokasis', 'masterKodes'));
     }
 
@@ -94,16 +109,23 @@ public function exportExcel(Request $request)
         // 1. Ambil prefix dari master kode aset yang dipilih
         $masterKode = \App\Models\MasterKodeAset::findOrFail($validated['master_kode_aset_id']);
 
-        // 2. Format nomor urut manual jadi 3 digit (misal: input 1 -> 001, input 25 -> 025)
-        $formattedSequence = str_pad($validated['nomor_urut'], 3, '0', STR_PAD_LEFT);
+        // 2. Cari barang terakhir dengan master_kode_aset_id ini
+        $lastBarang = BarangInventaris::where('master_kode_aset_id', $masterKode->id)
+                                      ->orderByRaw('CAST(SUBSTRING_INDEX(kode_aset, ".", -1) AS UNSIGNED) DESC')
+                                      ->first();
         
-        // 3. Gabungkan prefix dan nomor urut
-        $kodeAset = $masterKode->kode_prefix . '.' . $formattedSequence;
-
-        // 4. Cek duplikasi kode aset (mencegah user input nomor yang sudah dipakai)
-        if (BarangInventaris::where('kode_aset', $kodeAset)->exists()) {
-            return back()->withErrors(['nomor_urut' => 'Nomor urut ini sudah terpakai untuk prefix tersebut!'])->withInput();
+        $nextUrut = 1;
+        if ($lastBarang) {
+            $lastKodeParts = explode('.', $lastBarang->kode_aset);
+            $lastNumber = intval(end($lastKodeParts));
+            $nextUrut = $lastNumber + 1;
         }
+
+        // 3. Format nomor urut jadi 3 digit (misal: 1 -> 001, 25 -> 025)
+        $formattedSequence = str_pad($nextUrut, 3, '0', STR_PAD_LEFT);
+        
+        // 4. Gabungkan prefix dan nomor urut
+        $kodeAset = $masterKode->kode_prefix . '.' . $formattedSequence;
 
         $validated['kode_aset'] = $kodeAset;
 
