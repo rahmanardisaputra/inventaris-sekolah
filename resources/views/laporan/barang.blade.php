@@ -103,8 +103,9 @@
     }
 </style>
 
+<div id="area-cetak">
 <!-- Header Laporan -->
-<div class="header-laporan" id="area-cetak">
+<div class="header-laporan">
     <h3>LAPORAN BARANG SD Muhammadiyah Metro Pusat</h3>
     <div class="info-cetak">
         <strong>Ruang:</strong> {{ $lokasiTerpilih->nama_ruangan ?? 'Semua Ruangan' }} &nbsp;|&nbsp; 
@@ -174,7 +175,7 @@
 </div>
 
 <!-- Tabel Laporan -->
-<div class="card shadow-sm mb-4 no-print">
+<div class="card shadow-sm mb-4">
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-laporan">
@@ -325,5 +326,6 @@
         <br><br><br>
         <p>( {{ Auth::user()->name }} )</p>
     </div>
+</div>
 </div>
 @endsection

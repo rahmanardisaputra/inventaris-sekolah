@@ -112,7 +112,7 @@
         </table>
     </div>
 
-    <div class="mt-5 row no-print">
+    <div class="mt-5 row d-print-flex d-none">
         <div class="col-6 text-center">
             <p>Mengetahui,<br>Kepala Sekolah</p>
             <br><br><br>
