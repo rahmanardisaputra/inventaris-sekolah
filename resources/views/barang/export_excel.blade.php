@@ -28,7 +28,7 @@
     <Cell><Data ss:Type="String">KONDISI</Data></Cell>
     <Cell><Data ss:Type="String">PEROLEHAN</Data></Cell>
     <Cell><Data ss:Type="String">HARGA</Data></Cell>
-    <Cell><Data ss:Type="String">TAHUN</Data></Cell>
+    <Cell><Data ss:Type="String">TANGGAL</Data></Cell>
     <Cell><Data ss:Type="String">KET</Data></Cell>
    </Row>
    @foreach($barangs as $index => $barang)
@@ -43,7 +43,7 @@
     <Cell><Data ss:Type="String">{{ $barang->kondisi_terkini }}</Data></Cell>
     <Cell><Data ss:Type="String">{{ $barang->sumber_perolehan ?? 'Beli' }}</Data></Cell>
     <Cell><Data ss:Type="String">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</Data></Cell>
-    <Cell><Data ss:Type="String">{{ $barang->tanggal_perolehan ? \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') : '-' }}</Data></Cell>
+    <Cell><Data ss:Type="String">{{ $barang->tanggal_perolehan ? \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d-m-Y') : '-' }}</Data></Cell>
     <Cell><Data ss:Type="String">{{ $barang->sumber_dana ?? '-' }}</Data></Cell>
    </Row>
    @endforeach

@@ -191,7 +191,7 @@
                         <th>KONDISI</th>
                         <th>PEROLEHAN</th>
                         <th>HARGA</th>
-                        <th>TAHUN</th>
+                        <th>TANGGAL</th>
                         <th>KET</th>
                     </tr>
                 </thead>
@@ -215,7 +215,7 @@
                         </td>
                         <td class="text-center">{{ $barang->sumber_perolehan ?? 'Beli' }}</td>
                         <td class="text-end text-tiny">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
-                        <td class="text-center text-tiny">{{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') }}</td>
+                        <td class="text-center text-tiny">{{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d-m-Y') }}</td>
                         <td class="text-tiny">{{ Str::limit($barang->sumber_dana ?? '-', 20) }}</td>
                     </tr>
                     @empty
