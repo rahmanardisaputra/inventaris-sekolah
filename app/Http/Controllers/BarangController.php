@@ -183,6 +183,7 @@ public function exportExcel(Request $request)
             'harga_perolehan' => 'required|numeric|min:0',
             'tanggal_perolehan' => 'required|date',
             'kondisi_terkini' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'sumber_dana' => 'nullable|string|max:255',
             'catatan_waka' => 'nullable|string',
         ]);
 
@@ -225,7 +226,7 @@ public function exportExcel(Request $request)
     {
         // Ambil barang yang statusnya 'pending'
         $barangs = BarangInventaris::where('status_validasi', 'pending')
-                                    ->with('lokasi')
+                                    ->with(['lokasi', 'masterKodeAset'])
                                     ->orderBy('created_at', 'asc')
                                     ->get();
         

@@ -216,7 +216,7 @@
                         <td class="text-center">{{ $barang->sumber_perolehan ?? 'Beli' }}</td>
                         <td class="text-end text-tiny">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
                         <td class="text-center text-tiny">{{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') }}</td>
-                        <td class="text-tiny">{{ Str::limit($barang->catatan_waka ?? '-', 20) }}</td>
+                        <td class="text-tiny">{{ Str::limit($barang->sumber_dana ?? '-', 20) }}</td>
                     </tr>
                     @empty
                     <tr>

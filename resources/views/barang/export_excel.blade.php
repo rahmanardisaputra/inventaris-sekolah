@@ -44,7 +44,7 @@
     <Cell><Data ss:Type="String">{{ $barang->sumber_perolehan ?? 'Beli' }}</Data></Cell>
     <Cell><Data ss:Type="String">Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</Data></Cell>
     <Cell><Data ss:Type="String">{{ $barang->tanggal_perolehan ? \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('Y') : '-' }}</Data></Cell>
-    <Cell><Data ss:Type="String">{{ $barang->catatan_waka ?? '-' }}</Data></Cell>
+    <Cell><Data ss:Type="String">{{ $barang->sumber_dana ?? '-' }}</Data></Cell>
    </Row>
    @endforeach
   </Table>

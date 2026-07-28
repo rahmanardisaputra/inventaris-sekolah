@@ -20,6 +20,7 @@ class BarangInventaris extends Model
         'kondisi_terkini',
         'status_validasi',
         'catatan_waka',
+        'sumber_dana',
     ];
 
     protected $table = 'barang_inventaris';

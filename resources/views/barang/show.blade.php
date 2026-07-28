@@ -47,6 +47,10 @@
                         <td>: Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
+                        <th>Sumber Dana</th>
+                        <td>: {{ $barang->sumber_dana ?? '-' }}</td>
+                    </tr>
+                    <tr>
                         <th>Tanggal Perolehan</th>
                         <td>: {{ \Carbon\Carbon::parse($barang->tanggal_perolehan)->format('d F Y') }}</td>
                     </tr>

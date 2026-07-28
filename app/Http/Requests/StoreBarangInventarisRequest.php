@@ -30,6 +30,7 @@ class StoreBarangInventarisRequest extends FormRequest
             'harga_perolehan' => 'required|numeric|min:0',
             'tanggal_perolehan' => 'required|date',
             'kondisi_terkini' => 'required|in:Baik,Rusak Ringan,Rusak Berat',
+            'sumber_dana' => 'nullable|string|max:255',
             'catatan_waka' => 'nullable|string',
         ];
     }

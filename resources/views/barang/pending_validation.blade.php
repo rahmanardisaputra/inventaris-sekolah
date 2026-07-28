@@ -16,8 +16,8 @@
                     <strong>Pending:</strong> {{ $barang->kode_aset }}
                 </div>
                 <div class="card-body">
-                    <p><strong>Barang:</strong> {{ $barang->merek }} {{ $barang->jenis }}</p>
-                    <p><strong>Kategori:</strong> {{ $barang->kategori }}</p>
+                    <p><strong>Barang:</strong> {{ $barang->nama_barang }} {{ $barang->merek ? '- ' . $barang->merek : '' }}</p>
+                    <p><strong>Kategori:</strong> {{ $barang->masterKodeAset->kategori ?? '-' }}</p>
                     <p><strong>Harga:</strong> Rp {{ number_format($barang->harga_perolehan, 0, ',', '.') }}</p>
                     <p><strong>Lokasi Awal (Staff):</strong> {{ $barang->lokasi->nama_ruangan }}</p>
                     

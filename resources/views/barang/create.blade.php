@@ -77,6 +77,11 @@
                     </div>
                     
                     <div class="mb-3">
+                        <label class="form-label">Sumber Dana (Contoh: BOS, Komite)</label>
+                        <input type="text" name="sumber_dana" class="form-control" placeholder="Contoh: BOS, Komite">
+                    </div>
+                    
+                    <div class="mb-3">
                         <label class="form-label">Catatan Tambahan (Opsional)</label>
                         <textarea name="catatan_waka" class="form-control" rows="2"></textarea>
                     </div>

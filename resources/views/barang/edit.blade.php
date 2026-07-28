@@ -78,6 +78,11 @@
                     </div>
                     
                     <div class="mb-3">
+                        <label class="form-label">Sumber Dana (Contoh: BOS, Komite)</label>
+                        <input type="text" name="sumber_dana" class="form-control" value="{{ old('sumber_dana', $barang->sumber_dana) }}" placeholder="Contoh: BOS, Komite">
+                    </div>
+                    
+                    <div class="mb-3">
                         <label class="form-label">Catatan Tambahan (Opsional)</label>
                         <textarea name="catatan_waka" class="form-control" rows="2">{{ old('catatan_waka', $barang->catatan_waka) }}</textarea>
                     </div>
